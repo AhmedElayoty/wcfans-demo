@@ -67,15 +67,17 @@ header{padding:0}
 .fmtseg .fseg:not(.on):hover{background:rgba(212,175,55,.18)}
 /* (header controls redesigned · see APP BAR block below) */
 /* compact LIVE NOW summary (top of Matches) */
-.livesum{background:linear-gradient(180deg,rgba(255,59,92,.10),var(--card2));border:1px solid rgba(255,59,92,.42);border-radius:14px;padding:9px 10px 10px;margin-bottom:12px}
-.lshead{display:flex;align-items:center;gap:7px;font-family:'Oswald';font-weight:700;font-size:11px;letter-spacing:2px;color:var(--red);margin-bottom:8px}
+.livesum{background:var(--navy2);border:1px solid var(--red);border-radius:14px;overflow:hidden;margin-bottom:12px}
+.lshead{display:flex;align-items:center;gap:7px;font-family:'Oswald';font-weight:700;font-size:11px;letter-spacing:2px;color:var(--red);padding:9px 13px;background:linear-gradient(90deg,rgba(255,59,92,.16),transparent);border-bottom:1px solid rgba(255,59,92,.30)}
 .lscount{margin-inline-start:auto;font-size:10px;font-weight:600;letter-spacing:.5px;color:var(--mut)}
-.lschev{flex:0 0 auto;color:var(--dim);font-size:20px;font-weight:700;line-height:1;margin-inline-start:2px}
+.lschev{flex:0 0 auto;color:var(--mut);font-size:20px;font-weight:700;line-height:1;margin-inline-start:2px}
+html[dir="rtl"] .lschev{display:inline-block;transform:scaleX(-1)}
 .lspulse{width:8px;height:8px;border-radius:50%;background:var(--red);animation:lspulse 1.4s infinite}
 @keyframes lspulse{0%{box-shadow:0 0 0 0 rgba(255,59,92,.55)}70%{box-shadow:0 0 0 7px rgba(255,59,92,0)}100%{box-shadow:0 0 0 0 rgba(255,59,92,0)}}
-.lsrow{display:flex;align-items:center;gap:10px;width:100%;background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:10px;padding:8px 11px;cursor:pointer;color:var(--txt);font-family:'Oswald';font-weight:600}
-.lsrow+.lsrow{margin-top:6px}
-.lsrow:active{background:rgba(255,255,255,.08)}
+.lsrow{position:relative;display:flex;align-items:center;gap:10px;width:100%;background:var(--card2);border:0;border-top:1px solid var(--line);padding:11px 13px 11px 16px;cursor:pointer;color:var(--txt);font-family:'Oswald';font-weight:600;text-align:start}
+.lshead + .lsrow{border-top:0}
+.lsrow::before{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:3px;background:var(--red);opacity:.9}
+.lsrow:active{background:#16224e}
 .lsside{display:flex;align-items:center;gap:7px;flex:1;min-width:0}
 .lshome{justify-content:flex-end}
 .lsaway{justify-content:flex-start}
@@ -445,10 +447,11 @@ footer{padding:8px 0 14px;text-align:center;font-family:'Oswald';font-size:9.5px
 .metarow>.mven{margin-left:auto}
 .dwrap{display:flex;align-items:flex-start;gap:8px}
 .dwrap>.dstrip{flex:1;min-width:0}
-.natsearch{position:relative;flex:none}
-#natFilter{width:118px;height:55px;background:rgba(255,255,255,.06);color:var(--gold);border:1px solid var(--gold);border-radius:11px;font-family:'Oswald';font-weight:600;font-size:10px;letter-spacing:.3px;padding:0 8px;cursor:text}
+.natsearch{position:relative;margin:0 0 9px}
+#natFilter{width:100%;height:42px;background:rgba(255,192,46,.06);color:var(--gold);border:1px solid var(--gold);border-radius:11px;font-family:'Oswald';font-weight:600;font-size:12px;letter-spacing:.4px;padding:0 14px;cursor:text}
+#natFilter::placeholder{color:var(--gold);opacity:.85}
 #natFilter::placeholder{color:var(--gold);opacity:.9}
-.natlist{position:absolute;top:calc(100% + 5px);left:50%;transform:translateX(-50%);width:190px;max-height:46vh;overflow-y:auto;background:var(--card);border:1px solid var(--gold);border-radius:12px;padding:5px;z-index:60;box-shadow:0 14px 34px rgba(0,0,0,.55)}
+.natlist{position:absolute;top:calc(100% + 5px);left:0;right:0;width:auto;max-height:46vh;overflow-y:auto;background:var(--card);border:1px solid var(--gold);border-radius:12px;padding:5px;z-index:60;box-shadow:0 14px 34px rgba(0,0,0,.55)}
 .natlist::-webkit-scrollbar{width:0}
 .natitem{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;cursor:pointer}
 .natitem:hover,.natitem:active{background:rgba(255,255,255,.07)}
@@ -685,12 +688,12 @@ footer{padding:8px 0 14px;text-align:center;font-family:'Oswald';font-size:9.5px
 /* ====================== APP BAR (redesigned header) ====================== */
 .appbar{position:relative}
 .appbar__inner{position:relative;max-width:760px;margin:0 auto;min-height:52px;padding:8px 12px;display:flex;align-items:center;gap:10px}
-.brand{display:flex;align-items:center;gap:9px;text-decoration:none;min-width:0;margin-inline-end:auto}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;flex:0 0 auto;min-inline-size:max-content;margin-inline-end:auto}
 .brand__crest{flex:0 0 auto;width:30px;height:38px;border-radius:8px;background:#fff;display:grid;place-items:center;box-shadow:0 1px 3px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.6)}
 .brand__crest img{display:block;width:auto;height:30px;max-width:24px;object-fit:contain}
-.brand__name{font-family:'Oswald',sans-serif;font-weight:700;font-size:18px;line-height:1;letter-spacing:.5px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand__name{font-family:'Oswald',sans-serif;font-weight:700;font-size:18px;line-height:1;letter-spacing:.5px;color:var(--txt);white-space:nowrap}
 .brand__name b{color:var(--rust2);font-weight:700}
-.cluster{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.cluster{display:flex;align-items:center;gap:8px;flex-shrink:1;min-width:0;justify-content:flex-end}
 .tzchip{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 9px;border-radius:9px;cursor:pointer;white-space:nowrap;background:var(--card2);border:1px solid var(--line);color:var(--txt);transition:background .15s,border-color .15s}
 .tzchip:active{transform:scale(.97)}
 .tzchip:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
@@ -715,6 +718,15 @@ footer{padding:8px 0 14px;text-align:center;font-family:'Oswald';font-size:9.5px
 .seg__btn:focus-visible{outline:2px solid var(--cyan);outline-offset:1px}
 .sheet{position:absolute;top:calc(100% - 4px);inset-inline-end:12px;z-index:60;width:262px;padding:10px;border-radius:14px;background:var(--card);border:1px solid var(--line);box-shadow:0 14px 34px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:9px}
 .sheet[hidden]{display:none}
+.sheet__install{display:none}
+.sheet.is-installable .sheet__install{display:flex;align-items:center;gap:10px;width:100%;text-align:start;padding:11px;margin-bottom:9px;background:var(--card2);border:1px solid var(--gold);border-radius:12px;cursor:pointer;color:var(--txt)}
+.sheet__install:active{filter:brightness(1.15)}
+.sheet__install-ic{flex:0 0 auto;width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:rgba(255,192,46,.14);color:var(--gold);border-radius:10px}
+.sheet__install-txt{display:flex;flex-direction:column;gap:2px;min-width:0;text-align:start}
+.sheet__install-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:14px;letter-spacing:.2px}
+.sheet__install-sub{font-size:11px;color:var(--mut);line-height:1.3}
+.sheet__install-caret{margin-inline-start:auto;color:var(--mut);flex:0 0 auto}
+html[dir="rtl"] .sheet__install-caret{transform:scaleX(-1)}
 .sheet::before{content:"";position:absolute;top:-6px;inset-inline-end:64px;width:11px;height:11px;background:var(--card);border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}
 .sheet__row{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .sheet__lab{font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;color:var(--mut);white-space:nowrap}
@@ -732,9 +744,13 @@ footer{padding:8px 0 14px;text-align:center;font-family:'Oswald';font-size:9.5px
 .tzchip__lab{font-family:'Oswald',sans-serif;font-weight:600;font-size:12.5px;letter-spacing:.4px}
 .clock{font-family:'Oswald',sans-serif;font-weight:600;font-size:11.5px;letter-spacing:.5px;color:var(--txt);font-variant-numeric:tabular-nums}
 @keyframes condotPulse{0%{box-shadow:0 0 0 0 rgba(0,210,106,.5)}70%{box-shadow:0 0 0 5px rgba(0,210,106,0)}100%{box-shadow:0 0 0 0 rgba(0,210,106,0)}}
-@media (max-width:500px){.tzchip__off{display:none}.appbar__inner{gap:8px}.cluster{gap:6px}}
-@media (max-width:360px){.appbar__inner{padding:8px 10px}.brand__name{font-size:16px}.tzchip__code{display:none}}
-@media (max-width:330px){.authbtn__txt{display:none}.authbtn{padding:0 10px}}
+/* trailing buttons collapse to 36px icon squares on narrow phones; labels reveal as room allows */
+.tzchip{width:36px;padding:0;justify-content:center}
+.tzchip__lab,.tzchip__car{display:none}
+.authbtn{width:36px;padding:0;justify-content:center;border-radius:18px}
+.authbtn__txt{display:none}
+@media (min-width:420px){.appbar__inner{gap:10px}.authbtn{width:auto;padding:0 12px;border-radius:9px}.authbtn__txt{display:inline}.tzchip{width:auto;padding:0 9px}.tzchip__car{display:inline}}
+@media (min-width:480px){.tzchip__lab{display:inline}}
 html[dir="rtl"] .appbar__inner{direction:rtl}
 html[dir="rtl"] .connbar{direction:rtl}
 html[dir="rtl"] .clock,html[dir="rtl"] .cz{direction:ltr;unicode-bidi:isolate}
@@ -756,10 +772,10 @@ html[dir="rtl"] .tzsel{padding:0 10px 0 28px;background-position:left 10px cente
     <span class="tzchip__lab">Settings</span>
     <svg class="tzchip__car" viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
    </button>
-   <button class="iconbtn iconbtn--install" id="instIco" type="button" onclick="installApp()" aria-label="Install app" title="Install app" style="display:none"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3v10m0 0l-4-4m4 4l4-4M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
    <button class="authbtn" id="authTog" type="button" onclick="openAuth('L')"><svg class="authbtn__ico" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="authbtn__txt">Sign in</span></button>
   </div>
   <div class="sheet" id="setSheet" role="dialog" aria-label="Display settings" hidden>
+   <button type="button" class="sheet__install" id="installRow" onclick="installApp()" aria-label="Install app"><span class="sheet__install-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 3v10m0 0l-4-4m4 4l4-4M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="sheet__install-txt"><span class="sheet__install-title">Install app</span><span class="sheet__install-sub">Add to your home screen</span></span><svg class="sheet__install-caret" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
    <div class="sheet__row"><label class="sheet__lab" for="tzSel">Time zone</label><div class="sheet__ctrl"><select class="tzsel" id="tzSel" onchange="setTZ(this.value)" aria-label="Time zone"></select></div></div>
    <div class="sheet__row"><span class="sheet__lab" id="fmtLab">Time format</span><div class="seg" id="fmtTog" role="radiogroup" aria-labelledby="fmtLab"><button class="seg__btn is-on" type="button" data-h12="1" onclick="setHour12(true)">AM·PM</button><button class="seg__btn" type="button" data-h12="0" onclick="setHour12(false)">24H</button></div></div>
    <div class="sheet__row"><span class="sheet__lab" id="langLab">Language</span><div class="seg" id="langTog" role="radiogroup" aria-labelledby="langLab"><button class="seg__btn is-on" type="button" data-lang="en" onclick="setLang('en')">EN</button><button class="seg__btn seg__btn--ar" type="button" data-lang="ar" onclick="setLang('ar')">عربي</button></div></div>
@@ -779,7 +795,8 @@ html[dir="rtl"] .tzsel{padding:0 10px 0 28px;background-position:left 10px cente
  <section id="paneM">
   <div id="liveSummary"></div>
   <div id="heroBox"></div>
-  <div class="dwrap" id="dwrap"><div class="dstrip" id="dstrip"></div><div class="natsearch" id="natSearch"><input id="natFilter" type="text" placeholder="🔎 Nation" autocomplete="off" oninput="natSearchInput()" onfocus="natSearchInput()" onblur="natSearchClose()" onkeydown="natKey(event)" aria-label="Search matches by nation"><div class="natlist hide" id="natListBox" role="listbox"></div></div></div>
+  <div class="natsearch" id="natSearch"><input id="natFilter" type="text" placeholder="🔎 Choose a Nation to View its Matches" autocomplete="off" oninput="natSearchInput()" onfocus="natSearchInput()" onblur="natSearchClose()" onkeydown="natKey(event)" aria-label="Choose a nation to view its matches"><div class="natlist hide" id="natListBox" role="listbox"></div></div>
+  <div class="dwrap" id="dwrap"><div class="dstrip" id="dstrip"></div></div>
   <div class="filterbanner hide" id="filterBanner"></div>
   <div id="mlist"><div class="empty"><div class="big">⚽</div>Loading matches…</div></div>
  </section>
@@ -1053,7 +1070,7 @@ Object.assign(AR, {
   "📲 Install to phone":"📲 ثبّت على هاتفك","Install to phone":"ثبّت على هاتفك"
 });
 // multi-word phrases for substring replacement inside composite nodes (longest first; safe, no single short words)
-Object.assign(AR, {"Time zone":"المنطقة الزمنية","Time format":"صيغة الوقت","Language":"اللغة","Settings":"الإعدادات"});
+Object.assign(AR, {"Time zone":"المنطقة الزمنية","Time format":"صيغة الوقت","Language":"اللغة","Settings":"الإعدادات","Install app":"تثبيت التطبيق","Add to your home screen":"أضِفه إلى شاشتك الرئيسية"});
 const AR_PHRASES = Object.keys(AR).filter(k => /\s/.test(k) && /[A-Za-z]/.test(k)).sort((a,b)=>b.length-a.length);
 // dynamic / numeric templates
 const AR_RX = [
@@ -2433,7 +2450,7 @@ function installInstructionsHtml(){
     '<p>' + bi("أيقونة على شاشتك تفتح التطبيق مباشرةً، دون كتابة الرابط.", "An icon on your home screen that opens the app directly.") + '</p>' +
     steps + btn;
 }
-function updateInstallIcon(){ const ic = $("instIco"); if(!ic) return; ic.style.display = isStandaloneApp() ? "none" : "inline-flex"; }   // permanent, dismiss-proof: visible whenever not installed (works on iOS too → shows the Safari steps)
+function updateInstallIcon(){ const sh = $("setSheet"); if(sh) sh.classList.toggle("is-installable", !isStandaloneApp()); }   // shows the "Install app" row inside the Settings sheet whenever not installed (iOS too → Safari steps)
 addEventListener("beforeinstallprompt", e => { e.preventDefault(); _installPrompt = e; maybeShowInstall(); updateInstallIcon(); });
 addEventListener("appinstalled", () => { _installPrompt = null; hideInstallBar(); updateInstallIcon(); });
 function predictPopups(koUp) {   // one-time per user, on opening the Predict tab
@@ -3712,7 +3729,7 @@ newWeekPopup();   // signed-in users → one-time "next week's predictions are o
 applyLangInit();   // EN default; if AR saved → RTL + translate the UI and keep translating re-renders
 refreshCalIcons();   // swap the fixed 📅 glyph for a live calendar showing TODAY's date
 updateAuthTog();   // header Sign in / Sign out pill
-try { const _nf = $("natFilter"); if (_nf) _nf.placeholder = (LANG === "ar") ? "🔎 منتخب" : "🔎 Nation"; } catch (_) {}
+try { const _nf = $("natFilter"); if (_nf) _nf.placeholder = (LANG === "ar") ? "🔎 اختر منتخباً لعرض مبارياته" : "🔎 Choose a Nation to View its Matches"; } catch (_) {}
 postFunFactBots();   // daily: 2 chat posts (AR + EN) of today's On This Day facts (dedup by id → once/day)
 if ("serviceWorker" in navigator) { addEventListener("load", () => Promise.resolve()); }   // offline + installable
 maybeShowInstall();   // "Install to phone" bar (hidden if already installed / on home screen)
