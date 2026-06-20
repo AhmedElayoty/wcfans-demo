@@ -726,14 +726,18 @@ footer{padding:8px 0 14px;text-align:center;font-family:'Oswald';font-size:9.5px
 .condot.is-off{background:var(--dim);animation:none}
 .condot.is-wait{background:var(--gold);animation:condotPulse 1.2s infinite}
 .contxt{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.5px;color:var(--dim);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.clock{margin-inline-start:auto;font-family:'Oswald',sans-serif;font-weight:600;font-size:11.5px;letter-spacing:.5px;color:var(--mut);font-variant-numeric:tabular-nums}
+.conr{margin-inline-start:auto;display:flex;align-items:center;gap:7px;flex:0 0 auto}
+.cz{font-family:'Oswald',sans-serif;font-weight:600;font-size:10px;letter-spacing:.5px;color:var(--mut);text-transform:uppercase}
+.cz--off{color:var(--gold);font-weight:700;text-transform:none}
+.tzchip__lab{font-family:'Oswald',sans-serif;font-weight:600;font-size:12.5px;letter-spacing:.4px}
+.clock{font-family:'Oswald',sans-serif;font-weight:600;font-size:11.5px;letter-spacing:.5px;color:var(--txt);font-variant-numeric:tabular-nums}
 @keyframes condotPulse{0%{box-shadow:0 0 0 0 rgba(0,210,106,.5)}70%{box-shadow:0 0 0 5px rgba(0,210,106,0)}100%{box-shadow:0 0 0 0 rgba(0,210,106,0)}}
 @media (max-width:500px){.tzchip__off{display:none}.appbar__inner{gap:8px}.cluster{gap:6px}}
 @media (max-width:360px){.appbar__inner{padding:8px 10px}.brand__name{font-size:16px}.tzchip__code{display:none}}
 @media (max-width:330px){.authbtn__txt{display:none}.authbtn{padding:0 10px}}
 html[dir="rtl"] .appbar__inner{direction:rtl}
 html[dir="rtl"] .connbar{direction:rtl}
-html[dir="rtl"] .clock,html[dir="rtl"] .tzchip__off{direction:ltr;unicode-bidi:isolate}
+html[dir="rtl"] .clock,html[dir="rtl"] .cz{direction:ltr;unicode-bidi:isolate}
 html[dir="rtl"] .tzsel{padding:0 10px 0 28px;background-position:left 10px center;text-align:right}
 </style>
 <script>window.__DEMO_CHAT="capriole_wc26_room_demo";</script><style>#demoRibbon{position:fixed;left:8px;bottom:8px;z-index:99999;background:#e05a2b;color:#fff;font:700 11px Oswald,system-ui,sans-serif;letter-spacing:1.5px;padding:5px 11px;border-radius:8px;opacity:.93}</style></head>
@@ -747,9 +751,9 @@ html[dir="rtl"] .tzsel{padding:0 10px 0 28px;background-position:left 10px cente
    <span class="brand__name">WORLD CUP <b>2026</b></span>
   </div>
   <div class="cluster">
-   <button class="tzchip" id="setBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="setSheet" aria-label="Time zone and display settings" onclick="toggleSettings(event)">
-    <svg class="tzchip__ic" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    <span class="tzchip__code" id="tzCode">UAE</span><span class="tzchip__off" id="tzOff">UTC+4</span>
+   <button class="tzchip" id="setBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="setSheet" aria-label="Settings" onclick="toggleSettings(event)">
+    <svg class="tzchip__ic" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M19.14 12.94a7.5 7.5 0 0 0 0-1.88l2-1.56-2-3.46-2.36.95a7.3 7.3 0 0 0-1.62-.94L14.8 2.6h-4l-.36 2.45a7.3 7.3 0 0 0-1.62.94L6.46 5.04l-2 3.46 2 1.56a7.5 7.5 0 0 0 0 1.88l-2 1.56 2 3.46 2.36-.95c.5.39 1.04.71 1.62.94l.36 2.45h4l.36-2.45c.58-.23 1.12-.55 1.62-.94l2.36.95 2-3.46-2-1.56ZM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7Z"/></svg>
+    <span class="tzchip__lab">Settings</span>
     <svg class="tzchip__car" viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
    </button>
    <button class="iconbtn iconbtn--install" id="instIco" type="button" onclick="installApp()" aria-label="Install app" title="Install app" style="display:none"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3v10m0 0l-4-4m4 4l4-4M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -761,7 +765,7 @@ html[dir="rtl"] .tzsel{padding:0 10px 0 28px;background-position:left 10px cente
    <div class="sheet__row"><span class="sheet__lab" id="langLab">Language</span><div class="seg" id="langTog" role="radiogroup" aria-labelledby="langLab"><button class="seg__btn is-on" type="button" data-lang="en" onclick="setLang('en')">EN</button><button class="seg__btn seg__btn--ar" type="button" data-lang="ar" onclick="setLang('ar')">عربي</button></div></div>
   </div>
  </div>
- <div class="connbar"><span class="condot" id="condot" aria-hidden="true"></span><span class="contxt" id="contxt">CONNECTING</span><time class="clock" id="clock" aria-label="Local time">--:--</time></div>
+ <div class="connbar"><span class="condot" id="condot" aria-hidden="true"></span><span class="contxt" id="contxt">CONNECTING</span><span class="conr"><span class="cz" id="tzCode">UAE</span><span class="cz cz--off" id="tzOff">UTC+4</span><time class="clock" id="clock" aria-label="Local time">--:--</time></span></div>
 </header>
 <nav>
  <button id="tabM" class="on" onclick="showTab('M')">MATCHES</button>
@@ -1049,7 +1053,7 @@ Object.assign(AR, {
   "📲 Install to phone":"📲 ثبّت على هاتفك","Install to phone":"ثبّت على هاتفك"
 });
 // multi-word phrases for substring replacement inside composite nodes (longest first; safe, no single short words)
-Object.assign(AR, {"Time zone":"المنطقة الزمنية","Time format":"صيغة الوقت","Language":"اللغة"});
+Object.assign(AR, {"Time zone":"المنطقة الزمنية","Time format":"صيغة الوقت","Language":"اللغة","Settings":"الإعدادات"});
 const AR_PHRASES = Object.keys(AR).filter(k => /\s/.test(k) && /[A-Za-z]/.test(k)).sort((a,b)=>b.length-a.length);
 // dynamic / numeric templates
 const AR_RX = [
@@ -3257,8 +3261,12 @@ async function postRoom(newMsgs) {
   // read-merge-write with verify+retry · if a concurrent writer clobbered us, re-merge so no message is lost
   let last = [];
   for (let t = 0; t < 3; t++) {
-    let msgs = [];
-    try { msgs = await readRoom(); } catch (_) {}
+    let msgs = null;
+    try { msgs = await readRoom(); } catch (_) { msgs = null; }
+    // SAFETY GUARD: a live room is never empty (it always holds the seed message). An empty or failed
+    // read means a network hiccup — refuse to write, or we would overwrite the entire room with just
+    // these few messages. This is exactly how the room got wiped once; never let it happen again.
+    if (!Array.isArray(msgs) || msgs.length === 0) { await new Promise(r => setTimeout(r, 350 + Math.random() * 400)); continue; }
     const existing = new Set(msgs.map(m => m.id));
     if (newMsgs.every(m => existing.has(m.id))) return msgs;   // already present
     msgs.push(...newMsgs.filter(m => !existing.has(m.id)));
@@ -3676,6 +3684,9 @@ async function trackVisit() {
     }
     if (!geo) geo = { c: "Unknown", cc: "" };
     const a = await readKey(STATS_KEY, {});
+    // SAFETY GUARD: established analytics is never an empty object — an empty read = a network hiccup.
+    // Refuse to write so a flaky read can't clobber the whole visitor history down to one row.
+    if (!a || typeof a !== "object" || Object.keys(a).length === 0) return;
     a.v = a.v || {};
     const r = a.v[vid] || { c: geo.c, cc: geo.cc, f: now, n: 0 };
     r.c = geo.c; r.cc = geo.cc; r.l = now;
@@ -3719,5 +3730,29 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 </script>
-<div id="demoRibbon">DEMO PREVIEW</div></body>
+<div id="demoRibbon">DEMO PREVIEW</div><script>(function(){
+  function mk(id,ha,hn,hl,hs,aa,an,al,as,clk){
+    return {id:id,date:new Date().toISOString(),
+      status:{type:{state:"in",description:"",detail:clk},displayClock:clk},
+      competitions:[{competitors:[
+        {homeAway:"home",team:{displayName:hn,abbreviation:ha,logo:hl},score:hs},
+        {homeAway:"away",team:{displayName:an,abbreviation:aa,logo:al},score:as}
+      ],venue:{fullName:"Demo Arena",address:{city:"Demo City"}},notes:[],details:[]}]};
+  }
+  var fakes=[
+    mk("demoLive1","CIV","Ivory Coast","https://flagcdn.com/w40/ci.png",1,"GER","Germany","https://flagcdn.com/w40/de.png",1,"63'"),
+    mk("demoLive2","JPN","Japan","https://flagcdn.com/w40/jp.png",0,"BRA","Brazil","https://flagcdn.com/w40/br.png",2,"29'")
+  ];
+  function ensure(){ if(typeof events==="undefined")return; fakes.forEach(function(f){ if(!events.some(function(e){return e.id===f.id;})) events.unshift(f); }); }
+  function patch(){ if(typeof renderMatches!=="function"||window.__demoPatched)return; window.__demoPatched=true;
+    var orig=renderMatches;
+    renderMatches=function(){ ensure();
+      try{ return orig.apply(this,arguments); }
+      catch(e){ events=events.filter(function(x){return x.id!=="demoLive1"&&x.id!=="demoLive2";}); return orig.apply(this,arguments); } };
+  }
+  var n=0,t=setInterval(function(){ n++;
+    if(typeof renderMatches==="function"){ patch(); ensure(); try{ renderMatches(); }catch(e){} clearInterval(t); }
+    if(n>60) clearInterval(t);
+  },250);
+})();</script></body>
 </html>
