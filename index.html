@@ -472,6 +472,18 @@ footer{padding:8px 0 14px;text-align:center;font-family:'Oswald';font-size:9.5px
 .natltt{font-family:'Oswald';font-weight:600;font-size:10px;letter-spacing:1.4px;color:var(--mut)}
 .natlx{flex:none;width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.07);color:var(--txt);font-size:15px;line-height:1;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
 .natlx:hover,.natlx:active{background:rgba(255,255,255,.14)}
+/* follow-a-nation picker overlay (green card) · same row look as the search list */
+.natpick{position:fixed;inset:0;background:rgba(4,8,22,.86);z-index:130;display:flex;align-items:center;justify-content:center;padding:18px}
+.natpick.hide{display:none}
+.natpick__box{position:relative;background:var(--card);border:1px solid #2a3a6b;border-radius:20px;padding:22px 16px 14px;max-width:360px;width:100%;max-height:84vh;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+.natpick__x{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:var(--mut);font-size:18px;line-height:1;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center}
+.natpick h2{font-family:'Oswald';font-weight:700;letter-spacing:1px;font-size:19px;color:var(--gold);margin:0 0 12px;padding-inline-end:34px}
+#natPickIn{width:100%;height:42px;background:var(--navy2);border:1px solid var(--line);border-radius:11px;color:var(--txt);font-family:'Oswald';font-weight:600;font-size:13px;letter-spacing:.3px;padding:0 14px;margin-bottom:10px;box-sizing:border-box}
+#natPickIn::placeholder{color:var(--mut)}
+.natpick__list{overflow-y:auto;min-height:80px;flex:1}
+.natpick__list::-webkit-scrollbar{width:0}
+.natitem.cur{background:rgba(0,210,106,.12)}
+.natitem .natcur{margin-inline-start:auto;color:var(--green);font-weight:700;flex:none}
 .filterbanner{display:flex;align-items:center;gap:10px;background:rgba(25,200,255,.10);border:1px solid rgba(25,200,255,.45);border-radius:12px;padding:8px 10px 8px 13px}
 .filterbanner .ff{width:26px;height:26px;object-fit:contain;flex:none}
 .filterbanner .fmeta{display:flex;flex-direction:column;line-height:1.15;min-width:0}
@@ -732,6 +744,10 @@ footer{padding:8px 0 14px;text-align:center;font-family:'Oswald';font-size:9.5px
 .seg__btn:focus-visible{outline:2px solid var(--cyan);outline-offset:1px}
 .sheet{position:absolute;top:calc(100% - 4px);inset-inline-end:12px;z-index:60;width:262px;padding:10px;border-radius:14px;background:var(--card);border:1px solid var(--line);box-shadow:0 14px 34px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:9px}
 .sheet[hidden]{display:none}
+.sheet__top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:-1px 0 2px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+.sheet__ttl{font-family:'Oswald';font-weight:700;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--mut)}
+.sheet__x{flex:none;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:var(--txt);font-size:17px;line-height:1;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center}
+.sheet__x:hover,.sheet__x:active{background:rgba(255,255,255,.16)}
 .sheet__install{display:none}
 .sheet.is-installable .sheet__install{display:flex;align-items:center;gap:10px;width:100%;text-align:start;padding:11px;margin-bottom:9px;background:var(--card2);border:1px solid var(--gold);border-radius:12px;cursor:pointer;color:var(--txt)}
 .sheet__install:active{filter:brightness(1.15)}
@@ -788,6 +804,7 @@ html[dir="rtl"] .tzsel{padding:0 10px 0 28px;background-position:left 10px cente
    <button class="authbtn" id="authTog" type="button" onclick="openAuth('L')"><svg class="authbtn__ico" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="authbtn__txt">Sign in</span></button>
   </div>
   <div class="sheet" id="setSheet" role="dialog" aria-label="Display settings" hidden>
+   <div class="sheet__top"><span class="sheet__ttl">Settings</span><button type="button" class="sheet__x" onclick="closeSettings()" aria-label="Close settings">&#215;</button></div>
    <button type="button" class="sheet__install" id="installRow" onclick="installApp()" aria-label="Install app"><span class="sheet__install-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 3v10m0 0l-4-4m4 4l4-4M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="sheet__install-txt"><span class="sheet__install-title">Install app</span><span class="sheet__install-sub">Add to your home screen</span></span><svg class="sheet__install-caret" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
    <div class="sheet__row"><label class="sheet__lab" for="tzSel">Time zone</label><div class="sheet__ctrl"><select class="tzsel" id="tzSel" onchange="setTZ(this.value)" aria-label="Time zone"></select></div></div>
    <div class="sheet__row"><span class="sheet__lab" id="fmtLab">Time format</span><div class="seg" id="fmtTog" role="radiogroup" aria-labelledby="fmtLab"><button class="seg__btn is-on" type="button" data-h12="1" onclick="setHour12(true)">AM·PM</button><button class="seg__btn" type="button" data-h12="0" onclick="setHour12(false)">24H</button></div></div>
@@ -808,8 +825,8 @@ html[dir="rtl"] .tzsel{padding:0 10px 0 28px;background-position:left 10px cente
  <section id="paneM">
   <div id="liveSummary"></div>
   <div id="heroBox"></div>
-  <div class="natsearch" id="natSearch"><input id="natFilter" type="text" readonly inputmode="search" placeholder="🔎 Choose a Nation to View its Matches" autocomplete="off" onclick="natTap(event)" oninput="natSearchInput()" onkeydown="natKey(event)" aria-label="Choose a nation to view its matches"><button type="button" class="natclear" id="natClear" aria-label="Clear selected nation" onmousedown="event.preventDefault()" onclick="clearNationFilter()">&#215;</button><div class="natlist hide" id="natListBox" role="listbox"></div></div>
   <div class="dwrap" id="dwrap"><div class="dstrip" id="dstrip"></div></div>
+  <div class="natsearch" id="natSearch"><input id="natFilter" type="text" readonly inputmode="search" placeholder="🔎 Choose a nation to view its scheduled matches" autocomplete="off" onclick="natTap(event)" oninput="natSearchInput()" onkeydown="natKey(event)" aria-label="Choose a nation to view its scheduled matches"><button type="button" class="natclear" id="natClear" aria-label="Clear selected nation" onmousedown="event.preventDefault()" onclick="clearNationFilter()">&#215;</button><div class="natlist hide" id="natListBox" role="listbox"></div></div>
   <div class="filterbanner hide" id="filterBanner"></div>
   <div id="mlist"><div class="empty"><div class="big">⚽</div>Loading matches…</div></div>
  </section>
@@ -874,6 +891,15 @@ html[dir="rtl"] .tzsel{padding:0 10px 0 28px;background-position:left 10px cente
   <button id="authBtn" onclick="authSubmit()">LET'S GO ⚽</button>
   <button id="authSkip" class="authskip" onclick="authSkip()">Not now · just browsing 👀</button>
   <div class="authnote">Log in once per device · that's it. Forgot your password? Ask Ahmed to reset it.</div>
+ </div>
+</div>
+
+<div id="natPick" class="natpick hide" role="dialog" aria-label="Choose your nation">
+ <div class="natpick__box">
+  <button class="natpick__x" onclick="closeNatPicker()" aria-label="Close">&#215;</button>
+  <h2 id="natPickTitle">CHOOSE YOUR NATION</h2>
+  <input id="natPickIn" type="text" inputmode="search" placeholder="🔎 Search nations" autocomplete="off" oninput="natPickRender()">
+  <div id="natPickList" class="natpick__list" role="listbox"></div>
  </div>
 </div>
 
@@ -1084,6 +1110,7 @@ Object.assign(AR, {
 });
 // multi-word phrases for substring replacement inside composite nodes (longest first; safe, no single short words)
 Object.assign(AR, {"Time zone":"المنطقة الزمنية","Time format":"صيغة الوقت","Language":"اللغة","Settings":"الإعدادات","Install app":"تثبيت التطبيق","Add to your home screen":"أضِفه إلى شاشتك الرئيسية"});
+Object.assign(AR, {"NEXT MATCH":"المباراة القادمة","NO UPCOMING MATCH":"لا مباراة قادمة","LIVE NOW":"مباشر الآن","TO KICK-OFF":"حتى الانطلاق","LIVE":"مباشر","CHOOSE A NATION":"اختر منتخباً","Tap to follow your team · your next match, live highlights & their road to the final":"اضغط لمتابعة منتخبك · مباراته القادمة وأبرز اللقطات وطريقه إلى النهائي","Choose a nation to view its scheduled matches":"اختر منتخباً لعرض مبارياته المجدولة"});
 const AR_PHRASES = Object.keys(AR).filter(k => /\s/.test(k) && /[A-Za-z]/.test(k)).sort((a,b)=>b.length-a.length);
 // dynamic / numeric templates
 const AR_RX = [
@@ -1104,6 +1131,8 @@ const AR_RX = [
   [/SHOW TOP (\d+)/g, "عرض أفضل $1"],
   [/FULL[ -]TIME/g, "انتهت المباراة"],
   [/HALF[ -]TIME/g, "نهاية الشوط الأول"],
+  [/●\s*PENALTY SHOOTOUT/g, "● ركلات الترجيح"],
+  [/●\s*LIVE\b/g, "● مباشر"],
   [/\bPENS\b/g, "ركلات ترجيح"],
   [/\bAET\b/g, "بعد التمديد"],
   [/\bFT\b/g, "انتهت"]
@@ -1266,16 +1295,13 @@ async function fillNatFilter() {
 // 2nd tap turns on typing. `readonly` is the off-switch for the mobile keyboard.
 function natOpen() { const b = $("natListBox"); return !!(b && !b.classList.contains("hide")); }
 function natReset() { const inp = $("natFilter"); if (inp) { inp.setAttribute("readonly", ""); inp.blur(); } }   // re-arm "1st tap = list", drop keyboard
-function updateNatLock() {   // the bar is locked until signed in · the placeholder says so
+function updateNatLock() {   // nation search is open to everyone · just keep the placeholder language-correct
   const inp = $("natFilter"); if (!inp) return;
   const ar = (typeof LANG !== "undefined" && LANG === "ar");
-  inp.placeholder = cs_user
-    ? (ar ? "🔎 اختر منتخباً لعرض مبارياته" : "🔎 Choose a Nation to View its Matches")
-    : (ar ? "🔒 سجّل الدخول لاختيار منتخب" : "🔒 Sign in to choose a nation");
+  inp.placeholder = ar ? "🔎 اختر منتخباً لعرض مبارياته المجدولة" : "🔎 Choose a nation to view its scheduled matches";
 }
 function natTap(e) {
   if (e) e.stopPropagation();
-  if (!cs_user) { openAuth("L", { ctx: "nation" }); return; }   // must be signed in to pick a nation
   const inp = $("natFilter");
   if (!natOpen()) { natSearchInput(); return; }                  // 1st tap: drop the list, keyboard stays down
   if (inp && inp.hasAttribute("readonly")) {                     // 2nd tap: enable typing → keyboard
@@ -1300,7 +1326,7 @@ function natSearchInput() {
   box.classList.remove("hide");
 }
 function natListClose(e) { if (e) e.stopPropagation(); const b = $("natListBox"); if (b) b.classList.add("hide"); natReset(); }   // dismiss without choosing
-function chooseNation(n) { if (!cs_user) { openAuth("L", { ctx: "nation" }); return; } const inp = $("natFilter"); if (inp) inp.value = n; const b = $("natListBox"); if (b) b.classList.add("hide"); natReset(); setNationFilter(n); }
+function chooseNation(n) { const inp = $("natFilter"); if (inp) inp.value = n; const b = $("natListBox"); if (b) b.classList.add("hide"); natReset(); setNationFilter(n); }
 function natKey(e) {
   if (e.key === "Escape") { const b = $("natListBox"); if (b) b.classList.add("hide"); natReset(); }
   else if (e.key === "Enter") { const q = (e.target.value || "").trim().toLowerCase(); if (!q) return;
@@ -1514,16 +1540,16 @@ function renderLiveSummary() {
   const list = events;   // LIVE NOW is tournament-wide · the nation filter narrows only the cards below, never this strip
   const live = (list || []).filter(e => e.status && e.status.type && e.status.type.state === "in");
   if (!live.length) { box.className = ""; box.style.display = "none"; box.innerHTML = ""; return; }
-  const ab = t => esc(t.team.abbreviation || t.team.shortDisplayName || t.team.displayName);
+  const nm = t => { const dn = t.team.displayName || t.team.shortDisplayName || t.team.abbreviation || ""; return esc((typeof LANG !== "undefined" && LANG === "ar") ? tAR(dn) : dn); };   // FULL names · translated to Arabic in Arabic mode
   const fl = t => { const u = t.team.logo || (t.team.logos && t.team.logos[0] && t.team.logos[0].href) || ""; return u ? '<img src="' + esc(u) + '" alt="" onerror="this.style.visibility=\'hidden\'">' : ''; };
   const rows = live.map(e => {
     const c = e.competitions[0];
     const H = c.competitors.find(x => x.homeAway === "home"), A = c.competitors.find(x => x.homeAway === "away");
     const clk = esc(e.status.displayClock || (LANG === "ar" ? "مباشر" : "LIVE"));
     return '<button type="button" class="lsrow" onclick="goLive(\'' + e.id + '\')">' +
-      '<span class="lsside lshome">' + fl(H) + '<span class="lsteam">' + ab(H) + '</span></span>' +
+      '<span class="lsside lshome">' + fl(H) + '<span class="lsteam">' + nm(H) + '</span></span>' +
       '<span class="lsmid"><span class="lsmin">' + clk + '</span><span class="lsscore">' + (H.score != null ? H.score : 0) + ' – ' + (A.score != null ? A.score : 0) + '</span></span>' +
-      '<span class="lsside lsaway"><span class="lsteam">' + ab(A) + '</span>' + fl(A) + '</span>' +
+      '<span class="lsside lsaway"><span class="lsteam">' + nm(A) + '</span>' + fl(A) + '</span>' +
       '<span class="lschev" aria-hidden="true">' + (LANG === "ar" ? "‹" : "›") + '</span>' +
       '</button>';
   }).join("");
@@ -2102,11 +2128,11 @@ async function renderHero() {
   } catch (_) { $("heroBox").innerHTML = ""; }
 }
 function heroBtns() {   // CHANGE NATION only · sign out now lives in the header
-  return '<div class="herobtns" onclick="event.stopPropagation()"><span class="heroChange" onclick="openNation(event)">CHANGE NATION ⚙</span></div>';
+  return '<div class="herobtns" onclick="event.stopPropagation()"><span class="heroChange" onclick="pickMyNation(event)">CHANGE NATION ⚙</span></div>';
 }
 function drawHero() {
   if (!myNation()) {   // no nation chosen yet → prompt in the green card instead of defaulting to Egypt
-    $("heroBox").innerHTML = '<div class="hero" onclick="openNation(event)" style="cursor:pointer">' +
+    $("heroBox").innerHTML = '<div class="hero" onclick="pickMyNation(event)" style="cursor:pointer">' +
       '<div class="hl"><span>★ CHOOSE YOUR NATION</span><span class="heroChange">PICK ⚙</span></div>' +
       '<div class="hpick">Tap to follow your team · your next match, live highlights &amp; their road to the final</div></div>';
     return;
@@ -3300,7 +3326,6 @@ function doSignOut() {   // shared-device safety: fully clear the signed-in iden
   myId = gid;
   window._predSkipped = true;
   $("nameModal").classList.add("hide");
-  try { if (typeof clearNationFilter === "function" && nationFilter) clearNationFilter(); } catch (_) {}   // nation view is sign-in only · drop it on sign-out
   if (events.length) renderMatches();
   renderHero(); renderChatComposer(); loadStandings(); updateAuthTog();
   if (!$("paneP").classList.contains("hide")) renderPredict();
@@ -3323,8 +3348,8 @@ function openNation(ev) {
   fillNations();
   const _ns = $("auNation"); if (_ns) _ns.value = myNation();   // preselect current nation
 }
-async function saveNation() {
-  const nation = $("auNation").value;
+async function saveNation(nationArg) {
+  const nation = (typeof nationArg === "string" && nationArg) ? nationArg : $("auNation").value;
   if (!nation) { $("authErr").textContent = "Choose a nation"; return; }
   if (!cs_user) {   // guest · store favourite nation locally, no account needed
     try { localStorage.setItem("cs_guest_nation", nation); } catch (_) {}
@@ -3343,6 +3368,34 @@ async function saveNation() {
     if (events.length) renderMatches();
   } catch (_) { $("authErr").textContent = "Couldn't save · try again"; }
 }
+// ===== Follow-a-nation (the green card) · sign-in required · reuses the search list look =====
+function pickMyNation(ev) {
+  if (ev) ev.stopPropagation();
+  if (!cs_user) { openAuth("L", { ctx: "nation" }); return; }   // following a nation is a signed-in feature
+  openNatPicker(function (name) { saveNation(name); });
+}
+let _natPickCb = null;
+async function openNatPicker(onPick) {
+  _natPickCb = onPick || null;
+  try { if (!_natNames.length) await fillNatFilter(); } catch (_) {}   // make sure the list has data
+  const t = $("natPickTitle"); if (t) t.textContent = (LANG === "ar") ? "اختر منتخبك" : "CHOOSE YOUR NATION";
+  const inp = $("natPickIn"); if (inp) { inp.value = ""; inp.placeholder = (LANG === "ar") ? "🔎 ابحث عن منتخب" : "🔎 Search nations"; }
+  natPickRender();
+  $("natPick").classList.remove("hide");
+}
+function closeNatPicker() { const o = $("natPick"); if (o) o.classList.add("hide"); _natPickCb = null; }
+function natPickRender() {
+  const box = $("natPickList"); if (!box) return;
+  const q = ($("natPickIn").value || "").trim().toLowerCase();
+  const matches = _natNames.filter(n => !q || n.toLowerCase().indexOf(q) !== -1);
+  box.innerHTML = matches.length
+    ? matches.map(n => { const lg = (_natLogos && _natLogos[n]) || "", cur = (n === myNation()) ? " cur" : "";
+        return '<div class="natitem' + cur + '" role="option" data-n="' + esc(n) + '" onclick="natPickChoose(this.dataset.n)">' +
+          (lg ? '<img src="' + esc(lg) + '" alt="" onerror="this.style.visibility=\'hidden\'">' : '') +
+          '<span class="nn">' + esc(n) + '</span>' + (cur ? '<span class="natcur">✓</span>' : '') + '</div>'; }).join("")
+    : '<div class="natempty">' + (LANG === "ar" ? "لا يوجد منتخب مطابق." : "No nation matches that.") + '</div>';
+}
+function natPickChoose(n) { const cb = _natPickCb; closeNatPicker(); if (cb) cb(n); }
 async function readKey(key, fallback) {
   const r = await fetch("https://textdb.online/" + key + "?t=" + Date.now(), { cache: "no-store" });
   if (!r.ok) throw new Error("HTTP " + r.status);
