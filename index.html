@@ -1607,7 +1607,7 @@ function renderLiveSummary() {
 function goLive(id) {   // tap a live-summary row → open + scroll to that match's full card
   showTab("M");
   const el = document.getElementById("mc" + id);
-  if (el) { if (openId !== id) toggleM(id); setTimeout(function () { const x = document.getElementById("mc" + id); if (x) x.scrollIntoView({ behavior: "smooth", block: "center" }); }, 80); }
+  if (el) { if (openId !== id) toggleM(id, true); setTimeout(function () { const x = document.getElementById("mc" + id); if (x) x.scrollIntoView({ behavior: "smooth", block: "center" }); }, 80); }
 }
 function updateAuthTog() {   // header auth button: Sign in (logged out → login/create) / Sign out (logged in)
   const b = $("authTog"); if (!b) return;
@@ -1644,10 +1644,20 @@ async function fillDetail(id, force) {
     if (box) box.innerHTML = `<div class="dnote">Couldn't load line-ups (${esc(String(e.message || e))}).</div>`;
   }
 }
-async function toggleM(id) {
+async function toggleM(id, noScroll) {
   openId = openId === id ? null : id;
   renderMatches();
-  if (openId) fillDetail(openId);
+  if (openId) {
+    fillDetail(openId);
+    if (!noScroll) setTimeout(() => {   // land at the TOP of the just-opened card (below the sticky header), not deep in its details
+      if (openId !== id) return;
+      const card = document.getElementById("mc" + id); if (!card) return;
+      const tb = document.querySelector(".topbar");
+      const off = (tb ? tb.getBoundingClientRect().height : 0) + 8;
+      const y = card.getBoundingClientRect().top + window.scrollY - off;
+      window.scrollTo({ top: Math.max(0, y), behavior: "auto" });   // instant · the detail loads BELOW this point so the top stays put; a smooth scroll would get canceled by that async re-render
+    }, 70);
+  }
 }
 
 /* ================= GROUPS ================= */
@@ -2662,33 +2672,36 @@ function showMissedPopup(n) {   // render the popup with a live missed-count (al
 }
 // count of the user's MOST-RECENT consecutive missed predictable matches (real-team, finished),
 // only among matches after their first-ever prediction (so newcomers aren't nudged for pre-join games).
-function missedStreak() {
-  if (!cs_user) return 0;
+// {n, startId} of the user's MOST-RECENT consecutive missed predictable matches (a "miss-run").
+// startId = the OLDEST match in that run · it stays stable as the run grows but changes once the user
+// predicts again (breaking the run) and a new run forms → that's how we nudge once PER run, not per match.
+function missedStreakInfo() {
+  const out = { n: 0, startId: null };
+  if (!cs_user) return out;
   const evs = (seasonCache && seasonCache.events) || [];
   const has = id => hasPred(myPreds[id]);
   const myIds = Object.keys(myPreds).filter(has);
-  if (!myIds.length) return 0;                       // never predicted → not a lapsed predictor
+  if (!myIds.length) return out;                     // never predicted → not a lapsed predictor
   const dateOf = {}; evs.forEach(e => { dateOf[e.id] = +new Date(e.date); });
   let firstTs = Infinity; myIds.forEach(id => { if (dateOf[id] != null) firstTs = Math.min(firstTs, dateOf[id]); });
-  if (!isFinite(firstTs)) return 0;
+  if (!isFinite(firstTs)) return out;
   const predictable = e => e.status && e.status.type && e.status.type.state === "post" &&
     ((e.competitions[0] || {}).competitors || []).every(c => c.team && c.team.logo);
   const fin = evs.filter(predictable).filter(e => +new Date(e.date) >= firstTs)
                  .sort((a, b) => new Date(a.date) - new Date(b.date));
-  let streak = 0;
-  for (let i = fin.length - 1; i >= 0; i--) { if (!has(fin[i].id)) streak++; else break; }
-  return streak;
+  for (let i = fin.length - 1; i >= 0; i--) { if (!has(fin[i].id)) { out.n++; out.startId = fin[i].id; } else break; }
+  return out;
 }
 function maybeMissedStreakPopup() {
   try {
     if (!cs_user) return;                            // signed-in users only (guests don't predict)
     if (document.getElementById("infoModal") || !$("nameModal").classList.contains("hide")) return;   // don't stack on another modal
-    const key = "cs_missed2_" + (cs_user.uid || cs_user.username);
-    if (localStorage.getItem(key)) return;           // one-time per account
-    const n = missedStreak();
-    if (n < 2) return;
-    localStorage.setItem(key, "1");
-    showMissedPopup(n);
+    const info = missedStreakInfo();
+    if (info.n < 2 || !info.startId) return;
+    const key = "cs_missed2_run_" + (cs_user.uid || cs_user.username);
+    if (localStorage.getItem(key) === info.startId) return;   // already nudged for THIS run · shows again only for a NEW run (predicted, then missed 2 more)
+    localStorage.setItem(key, info.startId);
+    showMissedPopup(info.n);
   } catch (_) {}
 }
 async function loadLeaderboard(evs, preAll) {
@@ -4074,5 +4087,5 @@ document.addEventListener("visibilitychange", () => {
     if(typeof renderMatches==="function"){ patch(); ensure(); try{ renderMatches(); }catch(e){} clearInterval(t); }
     if(n>60) clearInterval(t);
   },250);
-})();</script><script>setTimeout(function(){ try{ if(typeof showMissedPopup==="function" && !document.getElementById("infoModal")) showMissedPopup(2); }catch(e){} },3600);</script></body>
+})();</script><script>(function(){ try{ if(sessionStorage.getItem("cs_demo_pop"))return; }catch(e){} setTimeout(function(){ try{ if(typeof showMissedPopup==="function" && !document.getElementById("infoModal")){ showMissedPopup(2); try{sessionStorage.setItem("cs_demo_pop","1");}catch(e){} } }catch(e){} },3600); })();</script></body>
 </html>
