@@ -458,6 +458,16 @@ footer{padding:8px 0 14px;text-align:center;font-family:'Oswald';font-size:9.5px
 .natitem img{width:22px;height:22px;object-fit:contain;flex:none}
 .natitem .nn{font-family:'Oswald';font-weight:600;font-size:13px;letter-spacing:.3px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .natempty{padding:9px;color:var(--mut);font-size:12px}
+/* clear-(×) shown on the search bar once a nation is chosen */
+.natclear{display:none;position:absolute;top:50%;transform:translateY(-50%);inset-inline-end:8px;width:26px;height:26px;border-radius:50%;border:1px solid var(--gold);background:rgba(255,192,46,.16);color:var(--gold);font-size:17px;font-weight:700;line-height:1;align-items:center;justify-content:center;cursor:pointer;padding:0;z-index:3}
+.natclear:hover,.natclear:active{background:rgba(255,192,46,.28)}
+.natsearch.chosen .natclear{display:inline-flex}
+.natsearch.chosen #natFilter{padding-inline-end:44px}
+/* dismiss header inside the open list (× to bail without choosing) */
+.natlhead{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:-5px -5px 5px;padding:8px 9px;background:var(--card);border-bottom:1px solid var(--line);z-index:2}
+.natltt{font-family:'Oswald';font-weight:600;font-size:10px;letter-spacing:1.4px;color:var(--mut)}
+.natlx{flex:none;width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.07);color:var(--txt);font-size:15px;line-height:1;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.natlx:hover,.natlx:active{background:rgba(255,255,255,.14)}
 .filterbanner{display:flex;align-items:center;gap:10px;background:rgba(25,200,255,.10);border:1px solid rgba(25,200,255,.45);border-radius:12px;padding:8px 10px 8px 13px}
 .filterbanner .ff{width:26px;height:26px;object-fit:contain;flex:none}
 .filterbanner .fmeta{display:flex;flex-direction:column;line-height:1.15;min-width:0}
@@ -767,7 +777,7 @@ html[dir="rtl"] .tzsel{padding:0 10px 0 28px;background-position:left 10px cente
   </div>
   <div class="cluster">
    <button class="tzchip" id="setBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="setSheet" aria-label="Settings" onclick="toggleSettings(event)">
-    <svg class="tzchip__ic" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M19.14 12.94a7.5 7.5 0 0 0 0-1.88l2-1.56-2-3.46-2.36.95a7.3 7.3 0 0 0-1.62-.94L14.8 2.6h-4l-.36 2.45a7.3 7.3 0 0 0-1.62.94L6.46 5.04l-2 3.46 2 1.56a7.5 7.5 0 0 0 0 1.88l-2 1.56 2 3.46 2.36-.95c.5.39 1.04.71 1.62.94l.36 2.45h4l.36-2.45c.58-.23 1.12-.55 1.62-.94l2.36.95 2-3.46-2-1.56ZM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7Z"/></svg>
+    <svg class="tzchip__ic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
     <span class="tzchip__lab">Settings</span>
     <svg class="tzchip__car" viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
    </button>
@@ -794,7 +804,7 @@ html[dir="rtl"] .tzsel{padding:0 10px 0 28px;background-position:left 10px cente
  <section id="paneM">
   <div id="liveSummary"></div>
   <div id="heroBox"></div>
-  <div class="natsearch" id="natSearch"><input id="natFilter" type="text" placeholder="🔎 Choose a Nation to View its Matches" autocomplete="off" oninput="natSearchInput()" onfocus="natSearchInput()" onblur="natSearchClose()" onkeydown="natKey(event)" aria-label="Choose a nation to view its matches"><div class="natlist hide" id="natListBox" role="listbox"></div></div>
+  <div class="natsearch" id="natSearch"><input id="natFilter" type="text" placeholder="🔎 Choose a Nation to View its Matches" autocomplete="off" oninput="natSearchInput()" onfocus="natSearchInput()" onblur="natSearchClose()" onkeydown="natKey(event)" aria-label="Choose a nation to view its matches"><button type="button" class="natclear" id="natClear" aria-label="Clear selected nation" onmousedown="event.preventDefault()" onclick="clearNationFilter()">&#215;</button><div class="natlist hide" id="natListBox" role="listbox"></div></div>
   <div class="dwrap" id="dwrap"><div class="dstrip" id="dstrip"></div></div>
   <div class="filterbanner hide" id="filterBanner"></div>
   <div id="mlist"><div class="empty"><div class="big">⚽</div>Loading matches…</div></div>
@@ -1253,14 +1263,17 @@ function natSearchInput() {
   const q = ($("natFilter").value || "").trim().toLowerCase();
   const box = $("natListBox"); if (!box) return;
   const matches = _natNames.filter(n => !q || n.toLowerCase().indexOf(q) !== -1);
-  box.innerHTML = matches.length
+  const head = '<div class="natlhead"><span class="natltt">' + (LANG === "ar" ? "اختر منتخباً" : "CHOOSE A NATION") + '</span>' +
+    '<button type="button" class="natlx" aria-label="Close list" onmousedown="event.preventDefault()" onclick="natListClose(event)">&#215;</button></div>';
+  box.innerHTML = head + (matches.length
     ? matches.map(n => { const lg = (_natLogos && _natLogos[n]) || "";
         return '<div class="natitem" role="option" data-n="' + esc(n) + '" onmousedown="event.preventDefault()" onclick="chooseNation(this.dataset.n)">' +
           (lg ? '<img src="' + esc(lg) + '" alt="" onerror="this.style.visibility=\'hidden\'">' : '') +
           '<span class="nn">' + esc(n) + '</span></div>'; }).join("")
-    : '<div class="natempty">No nation matches that.</div>';
+    : '<div class="natempty">' + (LANG === "ar" ? "لا يوجد منتخب مطابق." : "No nation matches that.") + '</div>');
   box.classList.remove("hide");
 }
+function natListClose(e) { if (e) e.stopPropagation(); const b = $("natListBox"); if (b) b.classList.add("hide"); const inp = $("natFilter"); if (inp) inp.blur(); }   // dismiss the open list without choosing
 function natSearchClose() { setTimeout(() => { const b = $("natListBox"); if (b) b.classList.add("hide"); }, 150); }   // delay so an item click registers first
 function chooseNation(n) { const inp = $("natFilter"); if (inp) { inp.value = n; inp.blur(); } const b = $("natListBox"); if (b) b.classList.add("hide"); setNationFilter(n); }
 function natKey(e) {
@@ -1274,6 +1287,7 @@ async function setNationFilter(raw) {
   const name = _natNames.find(n => n.toLowerCase() === v.toLowerCase());   // resolve typed text to a real nation
   if (!name) return;   // partial / unrecognised text · wait for a valid pick from the list
   nationFilter = name;
+  const _ns = $("natSearch"); if (_ns) _ns.classList.add("chosen");   // reveals the clear-(×) on the bar
   let evs = []; try { evs = await seasonEvents(); } catch (_) {}
   _natMatches = evs.filter(e => (e.competitions[0].competitors || []).some(c => c.team && c.team.displayName === nationFilter))
                    .sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -1290,6 +1304,7 @@ async function setNationFilter(raw) {
 function clearNationFilter() {
   nationFilter = ""; _natMatches = [];
   const sel = $("natFilter"); if (sel) sel.value = "";
+  const _ns = $("natSearch"); if (_ns) _ns.classList.remove("chosen");
   const lb = $("natListBox"); if (lb) lb.classList.add("hide");
   $("filterBanner").className = "filterbanner hide";
   $("dwrap").classList.remove("hide");
@@ -1465,7 +1480,7 @@ const logo = c => `<img src="${c.team.logo || ""}" alt="" onerror="this.style.vi
 // Compact LIVE NOW strip at the top of Matches: each in-progress match as flag · ABBR · score · ABBR · flag · minute.
 function renderLiveSummary() {
   const box = $("liveSummary"); if (!box) return;
-  const list = nationFilter ? _natMatches : events;
+  const list = events;   // LIVE NOW is tournament-wide · the nation filter narrows only the cards below, never this strip
   const live = (list || []).filter(e => e.status && e.status.type && e.status.type.state === "in");
   if (!live.length) { box.className = ""; box.style.display = "none"; box.innerHTML = ""; return; }
   const ab = t => esc(t.team.abbreviation || t.team.shortDisplayName || t.team.displayName);
@@ -2117,9 +2132,9 @@ function weekKeyAddDays(key, n) {
   d.setUTCDate(d.getUTCDate() + n);
   return d.toISOString().slice(0, 10).replace(/-/g, "");
 }
-async function syncMyPreds() {
+async function syncMyPreds(preAll) {
   try {
-    const all = await readKey(PRED_KEY, {});
+    const all = preAll || await readKey(PRED_KEY, {});   // reuse a read already done this render (avoids a duplicate fetch)
     const sv = (all[myId] && all[myId].preds) || {};
     if (!all[myId] && Object.keys(myPreds).length) return;  // transient/empty read · keep local cache, don't wipe
     const clean = {};
@@ -2130,7 +2145,9 @@ async function syncMyPreds() {
 }
 async function renderPredict() {
   try {
-    await syncMyPreds();
+    let allPreds = null;
+    try { allPreds = await readKey(PRED_KEY, {}); } catch (_) { allPreds = null; }   // ONE read · shared by syncMyPreds + loadLeaderboard below
+    await syncMyPreds(allPreds);
     const evs = await seasonEvents();
     const now = Date.now();
     const up = evs.filter(e => e.status.type.state === "pre" && new Date(e.date) > now && ((e.competitions[0] || {}).competitors || []).every(c => c.team && c.team.logo));   // real-team fixtures only (skip knockout placeholders)
@@ -2171,7 +2188,7 @@ async function renderPredict() {
       recent.map(e => predCard(e, true)).join("");
     const guestBanner = !cs_user ? '<div class="guestbar">👀 You’re browsing as a guest · <button onclick="openAuth(\'C\',{ctx:\'predict\'})">Sign in</button> to make predictions &amp; climb the leaderboard.</div>' : "";
     $("predList").innerHTML = guestBanner + html;
-    loadLeaderboard(evs);
+    loadLeaderboard(evs, allPreds);
     predictPopups(koUp);   // one-time knockout-rules / finale briefing
   } catch (err) {
     $("predList").innerHTML = '<div class="empty">Could not load fixtures · check connection.</div>';
@@ -2252,6 +2269,29 @@ function scorePred(p, H, A, e) {
   if (ph === h && pa === a) return 3;
   if (Math.sign(ph - pa) === Math.sign(h - a)) return 1;
   return 0;
+}
+/* ---- Incremental leaderboard scoring (cache the past · only compute the new) ----
+   A finished match's result never changes, so its points for a given prediction are a
+   pure function of (final score, prediction) and need computing only once. We memoise
+   per (matchId · finalResult · prediction); last week's finals stay cached and only this
+   week's newly-finished matches actually run scorePred. The key embeds the final score +
+   shootout + final-flag, so a post-FT correction (or a changed pick) busts it automatically
+   — the cached total can never drift from a full recompute. */
+const _ptsCache = new Map();
+function matchFinalKey(e, H, A) {   // identity of a finished result · null until the match is final
+  if (!e || !e.status || !e.status.type || e.status.type.state !== "post") return null;
+  if (H.score == null || A.score == null || H.score === "" || A.score === "") return null;
+  const so = (H.shootoutScore != null && A.shootoutScore != null) ? (H.shootoutScore + "-" + A.shootoutScore) : "";
+  return H.score + ":" + A.score + (so ? "/" + so : "") + (isFinalEvent(e) ? "#F" : "");
+}
+function _predSig(p) { return !p ? "" : (p.pens ? "P:" + (p.w || "") : (p.h + "v" + p.a)); }
+function scoreFinal(p, H, A, e) {   // same value as scorePred for FINISHED matches, memoised
+  const fk = matchFinalKey(e, H, A);
+  if (fk == null) return scorePred(p, H, A, e);   // not final yet → still in flux, never cache
+  const k = e.id + "|" + fk + "|" + _predSig(p);
+  let v = _ptsCache.get(k);
+  if (v === undefined) { v = scorePred(p, H, A, e); _ptsCache.set(k, v); }
+  return v;
 }
 async function submitPred(btn, ev) {
   ev.stopPropagation();
@@ -2491,15 +2531,15 @@ async function newWeekPopup() {
     showInfo(LANG === "ar" ? NEXTWEEK_AR : NEXTWEEK_HTML);
   } catch (_) {}
 }
-async function loadLeaderboard(evs) {
+async function loadLeaderboard(evs, preAll) {
   try {
-    const all = await readKey(PRED_KEY, {});
+    const all = preAll || await readKey(PRED_KEY, {});   // reuse renderPredict's single read when provided
     // OVERALL · all weeks: total points across every finished match (the standing that decides the final)
     try {
       const donePost = evs.filter(e => e.status.type.state === "post");
       const allRows = Object.entries(all).map(([uid, u]) => {
         let pts = 0, exact = 0, played = 0;
-        donePost.forEach(e => { const c = e.competitions[0]; const H = c.competitors.find(x => x.homeAway === "home"), A = c.competitors.find(x => x.homeAway === "away"); const p = (u.preds || {})[e.id]; if (!hasPred(p)) return; played++; const s = scorePred(p, H, A, e); pts += s; if (s === 3 || s === 10) exact++; });
+        donePost.forEach(e => { const c = e.competitions[0]; const H = c.competitors.find(x => x.homeAway === "home"), A = c.competitors.find(x => x.homeAway === "away"); const p = (u.preds || {})[e.id]; if (!hasPred(p)) return; played++; const s = scoreFinal(p, H, A, e); pts += s; if (s === 3 || s === 10) exact++; });
         return { uid, name: u.name || "?", pts, exact, played };
       }).filter(r => r.played > 0).sort((a, b) => b.pts - a.pts || b.exact - a.exact);
       const champ = allRows[0];
@@ -2526,7 +2566,7 @@ async function loadLeaderboard(evs) {
         const p = (u.preds || {})[e.id];
         if (!hasPred(p)) return;
         played++;
-        const s = scorePred(p, H, A, e);
+        const s = scoreFinal(p, H, A, e);
         pts += s;
         if (s === 3 || s === 10) exact++;
       });
