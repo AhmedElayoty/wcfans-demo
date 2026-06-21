@@ -397,6 +397,10 @@ footer{padding:8px 0 14px;text-align:center;font-family:'Oswald';font-size:9.5px
 #nameModal select{width:100%;background:var(--navy2);border:1px solid var(--line);border-radius:12px;
  color:var(--txt);font-size:15px;padding:12px 14px;outline:none;text-align:center;margin-bottom:12px;
  -webkit-appearance:none;appearance:none}
+#nameModal .aunatbtn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--navy2);border:1px solid var(--line);border-radius:12px;color:var(--txt);font-family:'Oswald';font-weight:600;font-size:15px;padding:12px 14px;margin-bottom:12px;cursor:pointer;text-align:start}
+#nameModal .aunatbtn.empty{color:var(--mut)}
+#nameModal .aunatbtn:hover{border-color:var(--rust2)}
+.aunatbtn__car{flex:none;color:var(--mut)}
 .authtabs{display:flex;gap:8px;margin-bottom:14px}
 #nameModal .authtabs button{flex:1;background:var(--navy2);border:1px solid var(--line);color:var(--mut);
  font-family:'Oswald';letter-spacing:1px;font-size:12px;padding:9px;border-radius:10px;cursor:pointer;width:auto}
@@ -885,7 +889,8 @@ html[dir="rtl"] .tzsel{padding:0 10px 0 28px;background-position:left 10px cente
   </div>
   <input id="auUser" maxlength="15" placeholder="Username · letters, numbers, _" autocomplete="username">
   <input id="auPass" type="password" maxlength="30" placeholder="Password" autocomplete="current-password">
-  <select id="auNation"><option value="">Choose your nation…</option></select>
+  <button type="button" id="auNationBtn" class="aunatbtn" onclick="openAuthNation(event)"><span id="auNationLab">Choose your nation…</span><svg class="aunatbtn__car" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <input type="hidden" id="auNation" value="">
   <div id="authErr"></div>
   <label class="authrem" id="authRemRow"><span>Remember me on this device</span><input type="checkbox" id="auRem" checked></label>
   <button id="authBtn" onclick="authSubmit()">LET'S GO ⚽</button>
@@ -3239,26 +3244,31 @@ function authMode(m) {
   $("auUser").style.display = ""; $("auPass").style.display = "";
   $("authRemRow").style.display = "";
   $("authClose").style.display = "none";
-  $("auNation").style.display = m === "C" ? "" : "none";
+  $("auNationBtn").style.display = m === "C" ? "" : "none";
+  syncAuNationBtn();
   $("authTitle").textContent = m === "C" ? "JOIN WORLD CUP 2026" : "WELCOME BACK";
   $("authBtn").textContent = "LET'S GO ⚽";
   $("authErr").textContent = "";
 }
-async function fillNations() {
-  const sel = $("auNation");
-  if (sel.options.length > 5) return;
-  let names = NATIONS_FALLBACK;
-  try {
-    const evs = await seasonEvents();
-    const s = new Set();
-    evs.forEach(e => e.competitions[0].competitors.forEach(c => {
-      const n = c.team.displayName || "";
-      if (!/winner|runner|loser|3rd|tbd|play|qualif/i.test(n)) s.add(n);
-    }));
-    if (s.size >= 32 && s.size <= 60) names = [...s].sort();
-  } catch (_) {}
-  sel.innerHTML = '<option value="">Choose your nation…</option>' +
-    names.map(n => '<option>' + esc(n) + '</option>').join("");
+async function fillNations() {   // ensure the picker has data + reflect any current value on the button
+  try { if (!_natNames.length) await fillNatFilter(); } catch (_) {}
+  syncAuNationBtn();
+}
+function syncAuNationBtn() {   // the create-account nation field is a button that opens the shared picker
+  const btn = $("auNationBtn"), lab = $("auNationLab"); if (!btn || !lab) return;
+  const v = ($("auNation") && $("auNation").value) || "";
+  const ar = (typeof LANG !== "undefined" && LANG === "ar");
+  lab.textContent = v || (ar ? "اختر منتخبك…" : "Choose your nation…");
+  btn.classList.toggle("empty", !v);
+}
+function openAuthNation(ev) {   // open the flag picker for the create-account form (sits above the auth modal)
+  if (ev) ev.stopPropagation();
+  openNatPicker(function (name) { setAuNation(name); });
+}
+function setAuNation(name) {
+  const h = $("auNation"); if (h) h.value = name || "";
+  syncAuNationBtn();
+  const e = $("authErr"); if (e) e.textContent = "";
 }
 async function sha256(s) {
   const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
