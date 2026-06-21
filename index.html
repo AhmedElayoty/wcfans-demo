@@ -1331,7 +1331,7 @@ function natSearchInput() {
   box.classList.remove("hide");
 }
 function natListClose(e) { if (e) e.stopPropagation(); const b = $("natListBox"); if (b) b.classList.add("hide"); natReset(); }   // dismiss without choosing
-function chooseNation(n) { const inp = $("natFilter"); if (inp) inp.value = n; const b = $("natListBox"); if (b) b.classList.add("hide"); natReset(); setNationFilter(n); }
+function chooseNation(n) { const inp = $("natFilter"); if (inp) inp.value = (typeof LANG !== "undefined" && LANG === "ar") ? tAR(n) : n;   /* display the name in the active language · the English `n` still drives the filter */ const b = $("natListBox"); if (b) b.classList.add("hide"); natReset(); setNationFilter(n); }
 function natKey(e) {
   if (e.key === "Escape") { const b = $("natListBox"); if (b) b.classList.add("hide"); natReset(); }
   else if (e.key === "Enter") { const q = (e.target.value || "").trim().toLowerCase(); if (!q) return;
@@ -1358,9 +1358,12 @@ async function setNationFilter(raw) {
   $("dwrap").classList.add("hide");
   const fb = $("filterBanner");
   fb.className = "filterbanner" + (nationFilter === myNation() ? " me" : "");
+  const _ar = (typeof LANG !== "undefined" && LANG === "ar");
+  const _cnt = _ar ? (_natMatches.length + " " + (_natMatches.length === 1 ? "مباراة" : "مباريات"))
+                   : (_natMatches.length + " match" + (_natMatches.length === 1 ? "" : "es"));
   fb.innerHTML = (logoUrl ? '<img class="ff" src="' + esc(logoUrl) + '" alt="" onerror="this.style.display=\'none\'">' : '') +
-    '<div class="fmeta"><span class="fn">' + esc(nationFilter) + '</span><span class="fc">' + _natMatches.length + ' match' + (_natMatches.length === 1 ? '' : 'es') + '</span></div>' +
-    '<button class="fbx" onclick="clearNationFilter()" aria-label="Clear nation filter">× Clear</button>';
+    '<div class="fmeta"><span class="fn">' + esc(_ar ? tAR(nationFilter) : nationFilter) + '</span><span class="fc">' + _cnt + '</span></div>';
+    /* clear lives on the search bar (the × there) · no separate Clear button needed */
   renderMatches();
 }
 function clearNationFilter() {
