@@ -333,6 +333,10 @@ footer{padding:8px 0 14px;text-align:center;font-family:'Oswald';font-size:9.5px
 .infomodal .irow div{font-size:12.5px;color:#cdd8f5;line-height:1.45}
 .infomodal .irow b{color:#fff}
 .infomodal .igo{width:100%;margin-top:10px;background:var(--rust);border:none;color:#fff;font-family:'Oswald';font-weight:700;letter-spacing:1px;font-size:14px;padding:13px;border-radius:12px;cursor:pointer}
+.infomodal .cfrow{display:flex;gap:10px;margin-top:8px}
+.infomodal .cfrow button{flex:1;font-family:'Oswald';font-weight:700;letter-spacing:.8px;font-size:13.5px;padding:13px;border-radius:12px;cursor:pointer}
+.infomodal .cfno{background:var(--navy2);border:1px solid var(--line);color:var(--txt)}
+.infomodal .cfyes{background:var(--rust);border:1px solid var(--rust2);color:#fff}
 .subbtn{margin-top:9px;width:100%;background:var(--rust);border:none;color:#fff;font-family:'Oswald';
  font-weight:600;letter-spacing:1.5px;font-size:12.5px;border-radius:10px;padding:10px;cursor:pointer}
 .subbtn:disabled{opacity:.7}
@@ -451,7 +455,7 @@ footer{padding:8px 0 14px;text-align:center;font-family:'Oswald';font-size:9.5px
 #natFilter{width:100%;height:42px;background:rgba(255,192,46,.06);color:var(--gold);border:1px solid var(--gold);border-radius:11px;font-family:'Oswald';font-weight:600;font-size:12px;letter-spacing:.4px;padding:0 14px;cursor:text}
 #natFilter::placeholder{color:var(--gold);opacity:.85}
 #natFilter::placeholder{color:var(--gold);opacity:.9}
-.natlist{position:absolute;top:calc(100% + 5px);left:0;right:0;width:auto;max-height:46vh;overflow-y:auto;background:var(--card);border:1px solid var(--gold);border-radius:12px;padding:5px;z-index:60;box-shadow:0 14px 34px rgba(0,0,0,.55)}
+.natlist{position:absolute;top:calc(100% + 5px);left:0;right:0;width:auto;max-height:46vh;overflow-y:auto;background:var(--card);border:1px solid var(--gold);border-radius:12px;padding:0 5px 5px;z-index:60;box-shadow:0 14px 34px rgba(0,0,0,.55)}
 .natlist::-webkit-scrollbar{width:0}
 .natitem{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:8px;cursor:pointer}
 .natitem:hover,.natitem:active{background:rgba(255,255,255,.07)}
@@ -464,7 +468,7 @@ footer{padding:8px 0 14px;text-align:center;font-family:'Oswald';font-size:9.5px
 .natsearch.chosen .natclear{display:inline-flex}
 .natsearch.chosen #natFilter{padding-inline-end:44px}
 /* dismiss header inside the open list (× to bail without choosing) */
-.natlhead{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:-5px -5px 5px;padding:8px 9px;background:var(--card);border-bottom:1px solid var(--line);z-index:2}
+.natlhead{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 -5px 5px;padding:8px 9px;background:var(--card);border-bottom:1px solid var(--line);z-index:2}
 .natltt{font-family:'Oswald';font-weight:600;font-size:10px;letter-spacing:1.4px;color:var(--mut)}
 .natlx{flex:none;width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.07);color:var(--txt);font-size:15px;line-height:1;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
 .natlx:hover,.natlx:active{background:rgba(255,255,255,.14)}
@@ -804,7 +808,7 @@ html[dir="rtl"] .tzsel{padding:0 10px 0 28px;background-position:left 10px cente
  <section id="paneM">
   <div id="liveSummary"></div>
   <div id="heroBox"></div>
-  <div class="natsearch" id="natSearch"><input id="natFilter" type="text" placeholder="🔎 Choose a Nation to View its Matches" autocomplete="off" oninput="natSearchInput()" onfocus="natSearchInput()" onblur="natSearchClose()" onkeydown="natKey(event)" aria-label="Choose a nation to view its matches"><button type="button" class="natclear" id="natClear" aria-label="Clear selected nation" onmousedown="event.preventDefault()" onclick="clearNationFilter()">&#215;</button><div class="natlist hide" id="natListBox" role="listbox"></div></div>
+  <div class="natsearch" id="natSearch"><input id="natFilter" type="text" readonly inputmode="search" placeholder="🔎 Choose a Nation to View its Matches" autocomplete="off" onclick="natTap(event)" oninput="natSearchInput()" onkeydown="natKey(event)" aria-label="Choose a nation to view its matches"><button type="button" class="natclear" id="natClear" aria-label="Clear selected nation" onmousedown="event.preventDefault()" onclick="clearNationFilter()">&#215;</button><div class="natlist hide" id="natListBox" role="listbox"></div></div>
   <div class="dwrap" id="dwrap"><div class="dstrip" id="dstrip"></div></div>
   <div class="filterbanner hide" id="filterBanner"></div>
   <div id="mlist"><div class="empty"><div class="big">⚽</div>Loading matches…</div></div>
@@ -1258,10 +1262,32 @@ async function fillNatFilter() {
   _natNames = names;
   try { await natLogos(); } catch (_) {}   // warm the existing nation→flag cache for the search list
 }
-// custom search combobox · type to narrow the list (no native datalist; that popped the full list + crashed mobile)
+// custom search combobox · gated behind sign-in. 1st tap drops the list (no keyboard);
+// 2nd tap turns on typing. `readonly` is the off-switch for the mobile keyboard.
+function natOpen() { const b = $("natListBox"); return !!(b && !b.classList.contains("hide")); }
+function natReset() { const inp = $("natFilter"); if (inp) { inp.setAttribute("readonly", ""); inp.blur(); } }   // re-arm "1st tap = list", drop keyboard
+function updateNatLock() {   // the bar is locked until signed in · the placeholder says so
+  const inp = $("natFilter"); if (!inp) return;
+  const ar = (typeof LANG !== "undefined" && LANG === "ar");
+  inp.placeholder = cs_user
+    ? (ar ? "🔎 اختر منتخباً لعرض مبارياته" : "🔎 Choose a Nation to View its Matches")
+    : (ar ? "🔒 سجّل الدخول لاختيار منتخب" : "🔒 Sign in to choose a nation");
+}
+function natTap(e) {
+  if (e) e.stopPropagation();
+  if (!cs_user) { openAuth("L", { ctx: "nation" }); return; }   // must be signed in to pick a nation
+  const inp = $("natFilter");
+  if (!natOpen()) { natSearchInput(); return; }                  // 1st tap: drop the list, keyboard stays down
+  if (inp && inp.hasAttribute("readonly")) {                     // 2nd tap: enable typing → keyboard
+    inp.removeAttribute("readonly");
+    inp.blur(); inp.focus();                                     // sync blur+focus on the now-editable field opens the keyboard
+    try { inp.setSelectionRange(0, (inp.value || "").length); } catch (_) {}   // select-all so the first keystroke replaces
+  }
+}
 function natSearchInput() {
-  const q = ($("natFilter").value || "").trim().toLowerCase();
-  const box = $("natListBox"); if (!box) return;
+  const inp = $("natFilter"); const box = $("natListBox"); if (!box) return;
+  const typing = inp && !inp.hasAttribute("readonly");           // browse mode (readonly) shows ALL · typing filters
+  const q = typing ? (inp.value || "").trim().toLowerCase() : "";
   const matches = _natNames.filter(n => !q || n.toLowerCase().indexOf(q) !== -1);
   const head = '<div class="natlhead"><span class="natltt">' + (LANG === "ar" ? "اختر منتخباً" : "CHOOSE A NATION") + '</span>' +
     '<button type="button" class="natlx" aria-label="Close list" onmousedown="event.preventDefault()" onclick="natListClose(event)">&#215;</button></div>';
@@ -1273,14 +1299,19 @@ function natSearchInput() {
     : '<div class="natempty">' + (LANG === "ar" ? "لا يوجد منتخب مطابق." : "No nation matches that.") + '</div>');
   box.classList.remove("hide");
 }
-function natListClose(e) { if (e) e.stopPropagation(); const b = $("natListBox"); if (b) b.classList.add("hide"); const inp = $("natFilter"); if (inp) inp.blur(); }   // dismiss the open list without choosing
-function natSearchClose() { setTimeout(() => { const b = $("natListBox"); if (b) b.classList.add("hide"); }, 150); }   // delay so an item click registers first
-function chooseNation(n) { const inp = $("natFilter"); if (inp) { inp.value = n; inp.blur(); } const b = $("natListBox"); if (b) b.classList.add("hide"); setNationFilter(n); }
+function natListClose(e) { if (e) e.stopPropagation(); const b = $("natListBox"); if (b) b.classList.add("hide"); natReset(); }   // dismiss without choosing
+function chooseNation(n) { if (!cs_user) { openAuth("L", { ctx: "nation" }); return; } const inp = $("natFilter"); if (inp) inp.value = n; const b = $("natListBox"); if (b) b.classList.add("hide"); natReset(); setNationFilter(n); }
 function natKey(e) {
-  if (e.key === "Escape") { const b = $("natListBox"); if (b) b.classList.add("hide"); e.target.blur(); }
+  if (e.key === "Escape") { const b = $("natListBox"); if (b) b.classList.add("hide"); natReset(); }
   else if (e.key === "Enter") { const q = (e.target.value || "").trim().toLowerCase(); if (!q) return;
     const m = _natNames.find(n => n.toLowerCase() === q) || _natNames.find(n => n.toLowerCase().indexOf(q) !== -1); if (m) chooseNation(m); }
 }
+// tap anywhere outside the search → close the list and re-arm
+addEventListener("click", e => {
+  if (!natOpen()) return;
+  if (e.target && e.target.closest && e.target.closest("#natSearch")) return;   // inside → items/buttons handle it
+  $("natListBox").classList.add("hide"); natReset();
+});
 async function setNationFilter(raw) {
   const v = (raw || "").trim();
   if (!v) return clearNationFilter();
@@ -1512,6 +1543,7 @@ function updateAuthTog() {   // header auth button: Sign in (logged out → logi
   b.onclick = cs_user ? signOut : function(){ openAuth("L"); };
   const t = b.querySelector(".authbtn__txt");
   if (t) t.textContent = cs_user ? (ar ? "تسجيل الخروج" : "Sign out") : (ar ? "تسجيل الدخول" : "Sign in");
+  try { updateNatLock(); } catch (_) {}   // nation search is gated on sign-in · keep its placeholder in sync
 }
 // settings sheet (timezone / format / language) opened from the TZ chip
 function toggleSettings(e){ if(e) e.stopPropagation(); const sh=$("setSheet"); if(!sh) return; if(sh.hasAttribute("hidden")){ sh.removeAttribute("hidden"); const b=$("setBtn"); if(b) b.setAttribute("aria-expanded","true"); } else closeSettings(); }
@@ -3157,6 +3189,8 @@ function openAuth(m, opts) {
     ? "Sign in to make predictions, earn points & climb the leaderboard · browsing stays free."
     : opts.ctx === "chat"
     ? "Sign in to post in the team chat · reading is always free."
+    : opts.ctx === "nation"
+    ? "Sign in to follow a nation and see its full schedule · browsing stays free."
     : "One-time setup · username, password & your nation";
 }
 function authSkip() {
@@ -3249,7 +3283,16 @@ function finishAuth(a) {
   });
   renderHero(); loadStandings(); pollChat(); renderChatComposer(); updateAuthTog();
 }
-function signOut() {   // shared-device safety: fully clear the signed-in identity + its cached predictions
+function signOut() {   // confirm first · a stray tap must never sign someone out (it lost a user their session before)
+  const ar = (typeof LANG !== "undefined" && LANG === "ar");
+  showInfo('<h2>' + (ar ? "تسجيل الخروج؟" : "SIGN OUT?") + '</h2>' +
+    '<p>' + (ar ? "هل أنت متأكد أنك تريد تسجيل الخروج؟" : "Are you sure you want to sign out?") + '</p>' +
+    '<div class="cfrow">' +
+      '<button type="button" class="cfno" onclick="closeInfo()">' + (ar ? "لا" : "No") + '</button>' +
+      '<button type="button" class="cfyes" onclick="closeInfo();doSignOut()">' + (ar ? "نعم، تسجيل الخروج" : "Yes, sign out") + '</button>' +
+    '</div>');
+}
+function doSignOut() {   // shared-device safety: fully clear the signed-in identity + its cached predictions
   cs_user = null;
   try { localStorage.removeItem("cs_user"); sessionStorage.removeItem("cs_user"); localStorage.removeItem("cs_name"); localStorage.removeItem("cs_preds"); } catch (_) {}
   myPreds = {};
@@ -3257,6 +3300,7 @@ function signOut() {   // shared-device safety: fully clear the signed-in identi
   myId = gid;
   window._predSkipped = true;
   $("nameModal").classList.add("hide");
+  try { if (typeof clearNationFilter === "function" && nationFilter) clearNationFilter(); } catch (_) {}   // nation view is sign-in only · drop it on sign-out
   if (events.length) renderMatches();
   renderHero(); renderChatComposer(); loadStandings(); updateAuthTog();
   if (!$("paneP").classList.contains("hide")) renderPredict();
@@ -3768,7 +3812,7 @@ newWeekPopup();   // signed-in users → one-time "next week's predictions are o
 applyLangInit();   // EN default; if AR saved → RTL + translate the UI and keep translating re-renders
 refreshCalIcons();   // swap the fixed 📅 glyph for a live calendar showing TODAY's date
 updateAuthTog();   // header Sign in / Sign out pill
-try { const _nf = $("natFilter"); if (_nf) _nf.placeholder = (LANG === "ar") ? "🔎 اختر منتخباً لعرض مبارياته" : "🔎 Choose a Nation to View its Matches"; } catch (_) {}
+try { updateNatLock(); } catch (_) {}
 postFunFactBots();   // daily: 2 chat posts (AR + EN) of today's On This Day facts (dedup by id → once/day)
 if ("serviceWorker" in navigator) { addEventListener("load", () => Promise.resolve()); }   // offline + installable
 maybeShowInstall();   // "Install to phone" bar (hidden if already installed / on home screen)
